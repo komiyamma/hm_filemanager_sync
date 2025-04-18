@@ -1,9 +1,21 @@
 ﻿/*
  * This codes is licensed under CC0 1.0 Universal
  */
-#HEXP = loaddll( "HmExplorerPane.dll" );
-#r = dllfunc( #HEXP, "SetMode", hidemaruhandle(0), 6 );
-#HWND = dllfunc( #HEXP, "GetWindowHandle", hidemaruhandle(0) );
-#ret = sendmessage( #HWND, 0x111/*WM_COMMAND*/, 206, 0 ); //206 フォルダ+ファイル一覧モード
-#ret = sendmessage( #HWND, 0x111, 252, 0 ); // 今開いているファイルとフォルダ+ファイルの開いている状態を今この瞬間同期
-freedll(#HEXP);
+
+jsmode "JScript\\" + currentmacrofilename;
+
+js {
+
+function main() {
+    var dll = loaddll( "HmExplorerPane.dll" );
+    dll.dllfunc.SetMode( hidemaru.getCurrentWindowHandle(), 6 );
+    var hWndFileManager = dll.dllfunc.GetWindowHandle( hidemaru.getCurrentWindowHandle() );
+    //206 フォルダ+ファイル一覧モード
+    hidemaru.sendMessage( hWndFileManager, 0x111/*WM_COMMAND*/, 206, 0 );
+    // 今開いているファイルとフォルダ+ファイルの開いている状態を今この瞬間同期
+    hidemaru.sendMessage( hWndFileManager, 0x111, 252, 0 );
+}
+
+hidemaru.setTimeout(main, 0);
+
+}

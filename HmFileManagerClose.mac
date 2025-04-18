@@ -1,0 +1,17 @@
+﻿/*
+ * This codes is licensed under CC0 1.0 Universal
+ */
+
+jsmode "JScript\\" + currentmacrofilename;
+
+js {
+
+function main() {
+    var dll = loaddll( "HmExplorerPane.dll" );
+    var hWndFileManager = dll.dllfunc.GetWindowHandle( hidemaru.getCurrentWindowHandle() );    // ファイルマネージャを閉じる
+    hidemaru.sendMessage( hWndFileManager, 0x111, 254, 0 );
+}
+
+hidemaru.setTimeout(main, 0);
+
+}
