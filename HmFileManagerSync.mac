@@ -6,14 +6,20 @@ jsmode "JScript\\" + currentmacrofilename;
 
 js {
 
+var currentMacroDirectory = currentmacrodirectory();
+
 function main() {
-    var dll = loaddll( "HmExplorerPane.dll" );
-    dll.dllfunc.SetMode( hidemaru.getCurrentWindowHandle(), 6 );
-    var hWndFileManager = dll.dllfunc.GetWindowHandle( hidemaru.getCurrentWindowHandle() );
-    //206 フォルダ+ファイル一覧モード
-    hidemaru.sendMessage( hWndFileManager, 0x111/*WM_COMMAND*/, 206, 0 );
-    // 今開いているファイルとフォルダ+ファイルの開いている状態を今この瞬間同期
-    hidemaru.sendMessage( hWndFileManager, 0x111, 252, 0 );
+    
+    var hmWndHandle = hidemaru.getCurrentWindowHandle();
+    
+    var hmExPaneDll = loaddll( "HmExplorerPane.dll" );
+    hmExPaneDll.dllFunc.SetMode( hmWndHandle, 6 ); // 6: フォルダ+ファイル一覧モード
+
+    var hWndExPane = hmExPaneDll.dllFunc.GetWindowHandle( hmWndHandle );
+   
+    hidemaru.sendMessage( hWndExPane, 0x111/*WM_COMMAND*/, 206, 0 ); // 206 フォルダ+ファイル一覧モードで、フォーカス有り
+    
+    hidemaru.sendMessage( hWndExPane, 0x111, 252, 0 ); // 今開いているファイルとフォルダ+ファイルの開いている状態を今この瞬間同期
 }
 
 hidemaru.setTimeout(main, 0);
