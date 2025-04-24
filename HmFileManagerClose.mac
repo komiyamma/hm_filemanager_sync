@@ -12,6 +12,12 @@ function main() {
     hidemaru.sendMessage( hWndFileManager, 0x111, 254, 0 );
 }
 
-hidemaru.setTimeout(main, 0);
+var timerHandle; // 宣言だけ。初期化しないこと
+
+if (typeof("timerHandle") != "undefined") {
+    hidemaru.clearTimeout(timerHandle);
+}
+
+timerHandle = hidemaru.setTimeout(main, 0);
 
 }
