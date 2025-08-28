@@ -2,14 +2,23 @@
  * This codes is licensed under CC0 1.0 Universal
  */
 
+setcompatiblemode 0x08000000;
+
 jsmode "JScript\\" + currentmacrofilename;
 
 js {
 
 function main() {
-    var dll = loaddll( "HmExplorerPane.dll" );
-    var hWndFileManager = dll.dllfunc.GetWindowHandle( hidemaru.getCurrentWindowHandle() );    // ファイルマネージャを閉じる
-    hidemaru.sendMessage( hWndFileManager, 0x111, 254, 0 );
+    
+    try {
+        var dll = loaddll( "HmExplorerPane.dll" );
+        if (!dll) { return; }
+        var hWndFileManager = dll.dllFunc.GetWindowHandle( hidemaru.getCurrentWindowHandle() );    // ファイルマネージャを閉じる
+        if (!hWndFileManager) { return; }
+        hidemaru.sendMessage( hWndFileManager, 0x111, 254, 0 );
+    }
+    catch(e) {
+    }
 }
 
 var timerHandle; // 宣言だけ。初期化しないこと
@@ -18,6 +27,6 @@ if (typeof("timerHandle") != "undefined") {
     hidemaru.clearTimeout(timerHandle);
 }
 
-timerHandle = hidemaru.setTimeout(main, 0);
+timerHandle = hidemaru.setTimeout(main, 500);
 
 }

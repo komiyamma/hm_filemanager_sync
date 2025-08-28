@@ -2,6 +2,8 @@
  * This codes is licensed under CC0 1.0 Universal
  */
 
+setcompatiblemode 0x08000000;
+
 jsmode "JScript\\" + currentmacrofilename;
 
 js {
@@ -9,17 +11,22 @@ js {
 var currentMacroDirectory = currentmacrodirectory();
 
 function main() {
-    
-    var hmWndHandle = hidemaru.getCurrentWindowHandle();
-    
-    var hmExPaneDll = loaddll( "HmExplorerPane.dll" );
-    hmExPaneDll.dllFunc.SetMode( hmWndHandle, 6 ); // 6: フォルダ+ファイル一覧モード
+    try {
+        var hmWndHandle = hidemaru.getCurrentWindowHandle();
+        
+        var hmExPaneDll = loaddll( "HmExplorerPane.dll" );
+        if (!hmExPaneDll) { return; }
+        
+        hmExPaneDll.dllFunc.SetMode( hmWndHandle, 6 ); // 6: フォルダ+ファイル一覧モード
 
-    var hWndExPane = hmExPaneDll.dllFunc.GetWindowHandle( hmWndHandle );
-   
-    hidemaru.sendMessage( hWndExPane, 0x111/*WM_COMMAND*/, 206, 0 ); // 206 フォルダ+ファイル一覧モードで、フォーカス有り
-    
-    hidemaru.sendMessage( hWndExPane, 0x111, 252, 0 ); // 今開いているファイルとフォルダ+ファイルの開いている状態を今この瞬間同期
+        var hWndExPane = hmExPaneDll.dllFunc.GetWindowHandle( hmWndHandle );
+        if (!hWndExPane) { return; }
+       
+        hidemaru.sendMessage( hWndExPane, 0x111/*WM_COMMAND*/, 206, 0 ); // 206 フォルダ+ファイル一覧モードで、フォーカス有り
+        
+        hidemaru.sendMessage( hWndExPane, 0x111, 252, 0 ); // 今開いているファイルとフォルダ+ファイルの開いている状態を今この瞬間同期
+    } catch(e) {
+    }
 }
 
 var timerHandle; // 宣言だけ。初期化しないこと

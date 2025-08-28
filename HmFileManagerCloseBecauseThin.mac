@@ -1,0 +1,37 @@
+﻿/*
+ * This codes is licensed under CC0 1.0 Universal
+ */
+
+setcompatiblemode 0x08000000;
+
+jsmode "JScript\\" + currentmacrofilename;
+
+js {
+
+var hidemaruDir = hidemarudir();
+
+function main() {
+    try {
+        var dll = loaddll( "HmExplorerPane.dll" );
+        if (!dll) { return; }
+        var hWndFileManager = dll.dllfunc.GetWindowHandle( hidemaru.getCurrentWindowHandle() );    // ファイルマネージャを閉じる
+        if (!hWndFileManager) { return; }
+        var com = createobject( hidemaruDir + "\\HmGetTargetWindowSize\\HmGetTargetWindowSize.dll", "HmGetTargetWindowSize.HmGetTargetWindowSize");
+        if (!com) { return; }
+        var w = com.GetWindowWidth(hWndFileManager);
+        if (w < 150) {
+            hidemaru.sendMessage( hWndFileManager, 0x111, 254, 0 );
+        }
+    } catch(e) {
+    }
+}
+
+var timerHandle; // 宣言だけ。初期化しないこと
+
+if (typeof("timerHandle") != "undefined") {
+    hidemaru.clearTimeout(timerHandle);
+}
+
+timerHandle = hidemaru.setTimeout(main, 500);
+
+}
