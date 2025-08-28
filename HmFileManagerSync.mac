@@ -22,6 +22,12 @@ function main() {
     hidemaru.sendMessage( hWndExPane, 0x111, 252, 0 ); // 今開いているファイルとフォルダ+ファイルの開いている状態を今この瞬間同期
 }
 
-hidemaru.setTimeout(main, 0);
+var timerHandle; // 宣言だけ。初期化しないこと
+
+if (typeof("timerHandle") != "undefined") {
+    hidemaru.clearTimeout(timerHandle);
+}
+
+timerHandle = hidemaru.setTimeout(main, 0);
 
 }
